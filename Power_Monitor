@@ -13,3 +13,20 @@ Solar Voltage Divider
 - R1 = 4700
 - R2 = 3300
 - Vout = 3.30v
+
+      +---(Node Vin)
+      |
+(B+)--+---(R1)---+---(2N2222 Collector)-+--(2N2222 Emitter)---(Vout - A0)
+                (R2)                    |
+(B-)-------------+------|          (2N2222 base)
+                        |               |
+                     (Ground)        (D-Pin) 
+                     
+                     
+      (B+)
+       |
+(S+)---+---(R1)---+--(2N2222 Collector)-+--(2N2222 Emitter)---(Vout - A0)
+                (R2)                    |
+(S-)---+---------+------|          (2N2222 base)
+       |                |               |
+      (B-)           (Ground)        (D-Pin) 
