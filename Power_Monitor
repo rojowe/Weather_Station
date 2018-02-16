@@ -18,7 +18,9 @@ Battery Voltage Divider
 
 /****************************/
 digitalWrite(D-Pin, HIGH);
-analogRead(A0)
+analogRead(A0);
+digitalWrite(D-Pim, LOW);
+/****************************/
 
                      
                      
@@ -35,5 +37,4 @@ Solar Voltage Divider
                 (R2)                    |                    |
 (S-)---+---------+------|          (2N2222 base)        (10K Resistor)
        |                |               |                    |
-    
-      (B-)           (Ground)        (D-Pin) 
+      (B-)           (Ground)        (D-Pin)              (Ground)
