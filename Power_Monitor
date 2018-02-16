@@ -10,11 +10,18 @@ Battery Voltage Divider
 
       +---(Node Vin)
       |
-(B+)--+---(R1)---+---(2N2222 Collector)-+--(2N2222 Emitter)---(Vout - A0)
-                (R2)                    |
-(B-)-------------+------|          (2N2222 base)
-                        |               |
-                     (Ground)        (D-Pin) 
+(B+)--+---(R1)---+---(2N2222 Collector)-+--(2N2222 Emitter)--+-(Vout - A0)
+                (R2)                    |                    |
+(B-)-------------+------|          (2N2222 base)        (10K Resistor)
+                        |               |                    |
+                     (Ground)        (D-Pin)              (Ground)
+
+/****************************/
+digitalWrite(D-Pin, HIGH);
+analogRead(A0)
+
+                     
+                     
 
 Solar Voltage Divider
 - Vin = 8v
@@ -24,8 +31,9 @@ Solar Voltage Divider
                      
       (B+)
        |
-(S+)---+---(R1)---+--(2N2222 Collector)-+--(2N2222 Emitter)---(Vout - A0)
-                (R2)                    |
-(S-)---+---------+------|          (2N2222 base)
-       |                |               |
+(S+)---+---(R1)---+--(2N2222 Collector)-+--(2N2222 Emitter)--+--(Vout - A0)
+                (R2)                    |                    |
+(S-)---+---------+------|          (2N2222 base)        (10K Resistor)
+       |                |               |                    |
+    
       (B-)           (Ground)        (D-Pin) 
