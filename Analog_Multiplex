@@ -1,0 +1,13 @@
+Since I am using the NodeMCU ESP-8266 based board, I only have 1 analog pin available. This is a challenge since I need to read:
+- 4x LDR (Solar tracking)
+- 2x Voltage Dividers (Battery & Solar Voltage)
+
+The Solution: Multiplexing
+- In short, all 5 signals will be connected to the analog pin and using digital pins, one by one each will be allowed to communicate with
+the controller for the few ms needed.
+- The LDRs should ber relatively simple to multiplex, A0 is their ground and Vin is the +5v supply when using a single LDR, since I only
+have the 1 input, I will power all 4 LDR's by writing their individual digital pins high, giving them +5v when I need to read their values,
+and writing their pins low, 0v, when I don't need them. This will eliminate noise creating unreadable values
+- The voltage monitoring brings about a different set of challenges, I'll need to use some kind of transistor to pass the voltage signal along only 
+when desired, the battery and solar monitoring can be achieved by controlling the signal through a transistor to the A0 pin. When signal is 
+not needed, simply send a low value to the transistor, and the gate closes
