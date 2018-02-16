@@ -1,0 +1,15 @@
+Voltage Divider to monitor solar voltage, and another to monitor the battery voltage
+- battery voltage will never exceed 5v (1s Lipo) (0-5v range)
+- Solar voltage will never exceed 6v (5v Panel)  (0-8v range (buffer on the high end, will still have good resolution))
+
+Battery Voltage Divider 
+- Vin = 5v
+- R1 = 2000
+- R2 = 3300
+- Vout = 3.11v
+
+Solar Voltage Divider
+- Vin = 8v
+- R1 = 4700
+- R2 = 3300
+- Vout = 3.30v
