@@ -8,12 +8,6 @@ Battery Voltage Divider
 - R2 = 3300
 - Vout = 3.11v
 
-Solar Voltage Divider
-- Vin = 8v
-- R1 = 4700
-- R2 = 3300
-- Vout = 3.30v
-
       +---(Node Vin)
       |
 (B+)--+---(R1)---+---(2N2222 Collector)-+--(2N2222 Emitter)---(Vout - A0)
@@ -21,7 +15,12 @@ Solar Voltage Divider
 (B-)-------------+------|          (2N2222 base)
                         |               |
                      (Ground)        (D-Pin) 
-                     
+
+Solar Voltage Divider
+- Vin = 8v
+- R1 = 4700
+- R2 = 3300
+- Vout = 3.30v
                      
       (B+)
        |
