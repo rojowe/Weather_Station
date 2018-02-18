@@ -1,4 +1,4 @@
-D1 - SDA 
-D2 - SCL
+D1 - GPIO 5 - SDA 
+D2 - GPIO 4- SCL
 
-Standard i2c device and use
+Standard i2c device and use, no settings needed to be changed for i2c to function 
