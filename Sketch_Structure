@@ -1,0 +1,22 @@
+1) Deep-Sleep Mode requires that all contents of the sketch should be placed within the Setup loop, the main loop is never reached 
+2) Wake up
+3) Gather Sensor Data 
+- Average LDR reading 
+- Temperature, Humidity, & Pressure 
+- Battery Voltage & Solar Voltage 
+3) Solar Tracking   
+- If the LDR sensors average is under the threshold, & there is no output from the solar panel, there is no need to activate solar tracking
+- If the LDR sensors average is above the threshold, activate solar tracking sequence 
+  - North-East vs. South-East vs. South-West vs. North-West 
+  - NE + SE > NW + SW = Turn East until values are roughly equal, else if NE + SE < NW + SW = Turn West until values are roughly equal
+  - NE + NW > SE + SW = Turn North until values are roughly equal, else if NE + NW < SE + SW = Turn South until values are roughly equal
+  - Solar Voltage should be used to track the highest output positions 
+4) Connect to Wifi & send data over MQTT 
+- LDR Average 
+- Temperature 
+- Humidity
+- Pressure 
+- Battery Voltage 
+- Solar Voltage
+5) Delay for 30 seconds for uploading a new sketch
+5) Deep-Sleep for 10 minutes 
