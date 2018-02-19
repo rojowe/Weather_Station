@@ -25,8 +25,8 @@ PinOut
 - 1
 - 2 - LDR Power (South-East) - diode - 
 - 3
-- 4 
-- 5
+- 4 - SDA
+- 5 - SCL
 - 9 
 - 10 - Battery Signal (On/Off) - transistor acting as a gate
 - 12 - LDR Power (North-West) - diode - 
