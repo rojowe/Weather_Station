@@ -3,8 +3,8 @@ Since I am using the NodeMCU ESP-8266 based board, I only have 1 analog pin avai
 - 2x Voltage Dividers (Battery & Solar Voltage)
 
 The Solution: Multiplexing
-- In short, all 5 signals will be connected to the analog pin and using digital pins, one by one each will be allowed to communicate with
-the controller for the few ms needed.
+- In short, all 6 signals will be connected to the analog pin, and using digital pins, one by one each will be allowed to communicate with
+the controller for the few ms needed. Diodes will be used to isolate signals from interfiering with eachother 
 - The LDRs should ber relatively simple to multiplex, A0 is their ground and Vin is the +5v supply when using a single LDR, since I only
 have the 1 input, I will power all 4 LDR's by writing their individual digital pins high, giving them +5v when I need to read their values,
 and writing their pins low, 0v, when I don't need them. This will eliminate noise creating unreadable values
