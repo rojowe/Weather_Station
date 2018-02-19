@@ -1,0 +1,23 @@
+1) Need Servo library 
+2) 
+
+
+int latPin;    //Servo pwm pin 
+int lonPin;    //Servo pwm pin
+
+Servo lat;    //Initializes variable for sevo named lat
+Servo lon;    //Initializes variable for servo named lon
+
+int lat_starting_position = 0;
+int lon_starting_position = 0;
+
+lat.attach(latPin);
+lon.attach(lonPin);
+
+
+void setup()
+{
+while(ldr_Average > threshold && solar_voltage > 2 Volts)
+{
+  solar_tracking();
+}
