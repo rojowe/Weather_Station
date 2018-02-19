@@ -17,3 +17,20 @@ Parts List
 - 1S Lipo
 - Solar Lipo Charger
 - PowerBoost 
+
+
+PinOut
+- GPIO
+- 0 - LDR Power (North-East) - diode - 
+- 1
+- 2 - LDR Power (South-East) - diode - 
+- 3
+- 4 
+- 5
+- 9 
+- 10 - Battery Signal (On/Off) - transistor acting as a gate
+- 12 - LDR Power (North-West) - diode - 
+- 13 - LDR Power (South-West) - diode - 
+- 14 - Solar Signal (On/Off) - transistor acting as a gate 
+- 15
+- 16
