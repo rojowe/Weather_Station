@@ -3,10 +3,10 @@ Voltage Divider to monitor solar voltage, and another to monitor the battery vol
 - Solar voltage will never exceed 6v (5v Panel)  (0-8v range (buffer on the high end, will still have good resolution))
 
 Battery Voltage Divider 
-- Vin = 5v
+- Vin = 5.3v
 - R1 = 2000
 - R2 = 3300
-- Vout = 3.11v
+- Vout = 3.3v
 
       
       
