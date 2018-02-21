@@ -30,3 +30,11 @@ Solar Voltage Divider
 (S-)---+---------+------|          (2N2222 base)        
                         |               |                    
                      (Ground)        (D-Pin)             
+
+
+
+Calculating remaining capacity
+- take known capacity of battery ie:2000mah (1s lipo)
+- known voltage of battery: 1s lipo will be ~4.2v fully charged, we know the voltage drops as the capacity decreases 
+- using these 2 variables, we will create a formula to gauge the remaining capacity
+- this information can dictate the stations behavior. 
