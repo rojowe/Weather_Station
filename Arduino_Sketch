@@ -1,1 +1,273 @@
+//Libraries
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
+
+//BME280 Settings 
+#define SEALEVELPRESSURE_HPA (1013.25)
+Adafruit_BME280 bme; // I2C
+
+unsigned long delayTime = 10000;   //Time between reporting bme data (10,000 = 10 seconds)
+
+float c = 0.0;
+float f = 0.0;
+float p = 0.0;
+float h = 0.0;
+
+char f_Buffer[10];
+char p_Buffer[10];
+char h_Buffer[10];
+char* fChar;
+char* pChar;
+char* hChar;
+
+//Analog Sensors on A0
+int sensorPin = A0;
+
+int battValue = 0;
+
+double battVoltage = 0.0;
+
+int batPin = 14; 
+
+char b_Buffer[10];
+char* bChar;
+
+//WIFI Settings 
+const char* ssid = "********";            //change for your network
+const char* password = "********";        //change for your network
+const char* mqtt_server = "192.168.1.2";  //change for your network
+
+WiFiClient espClient;
+PubSubClient client(espClient);
+long lastMsg = 0;
+char msg[50];
+int value = 0;
+
+//User Defined Functions 
+void setup_wifi();    //Establishes WiFi Connection
+void bmeData();       //Reports BME280 Data
+void analogSensors();
+void reconnect();    //Reconnects with MQTT Server
+void callback(char* topic, byte* payload, unsigned int length);
+void sendPrintData();
+void readAnalog(int* Pin, int* Value);
+
+
+//------------------------------------------------------------------------------
+void setup() 
+{
+  //Turn Off Built-In LED
+  pinMode(BUILTIN_LED, OUTPUT);
+  digitalWrite(BUILTIN_LED, HIGH);
+  
+  pinMode(batPin, OUTPUT);
+  digitalWrite(batPin, LOW);
+  
+  Serial.begin(115200); 
+  while (!Serial);             
+  {}
+  
+  Serial.println();
+  Serial.println("I'm Awake!");
+  Serial.println("nodeMCU Powered On...starting diagnostics...");
+  Serial.print(F("BME280 test..."));
+
+  //Start BME280 Sensor
+  bool status;
+  status = bme.begin();
+  if(!status)
+  {
+    Serial.println("No BME Sensor");
+    while(1);
+  }
+  else
+  {
+    Serial.println("BME Online!");
+  }
+
+  setup_wifi();
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
+
+  Serial.println("Setup Complete!");
+  Serial.println();
+  bmeData();
+  analogSensors();
+  sendPrintData();
+}
+
+//------------------------------------------------------------------------------------
+void loop() 
+{ 
+  if (!client.connected()) 
+  {
+    reconnect();
+  }
+  
+  client.loop();
+  
+  long now = millis();
+  if (now - lastMsg > delayTime) 
+  {
+    lastMsg = now;
+    //++value;
+    //snprintf (msg, 75, "hello world #%ld", value);
+    //Serial.print("Publish message: ");
+    //Serial.println(msg);
+    //client.publish("outTopic", msg);
+    
+    //Run bmeData function 
+    bmeData();
+    analogSensors();
+    sendPrintData();
+  }
+}
+
+//-----------------------------------------------------------------------------------------
+void setup_wifi() 
+{
+  delay(10);
+  // We start by connecting to a WiFi network
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) 
+  {
+    delay(500);
+    Serial.print(".");
+  }
+
+  randomSeed(micros());
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+//--------------------------------------------------------------------------------------
+void callback(char* topic, byte* payload, unsigned int length) 
+{
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i = 0; i < length; i++) 
+  {
+    Serial.print((char)payload[i]);
+  }
+  
+  Serial.println();
+
+  // Switch on the LED if an 1 was received as first character
+  if ((char)payload[0] == '1') 
+  {
+    digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
+    // but actually the LED is on; this is because
+    // it is acive low on the ESP-01)
+  } 
+  else 
+  {
+    digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
+  }
+}
+
+//---------------------------------------------------------------------------------------------
+void reconnect() 
+{  
+  // Loop until we're reconnected
+  while (!client.connected()) 
+  {
+    //Serial.print("Attempting MQTT connection...");
+    
+    // Create a random client ID
+    String clientId = "ESP8266Client-";
+    clientId += String(random(0xffff), HEX);
+    
+    // Attempt to connect
+    if (client.connect(clientId.c_str())) 
+    {
+      //Serial.println("connected");
+      // Once connected, publish an announcement...
+      client.publish("ALL", "ESP Weather - Online");
+      // ... and resubscribe
+      client.subscribe("ALL");
+      client.subscribe("esp");
+    } 
+    else 
+    {
+      Serial.print("MQTT Connection failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
+
+//--------------------------------------------------------------------------------------------
+void analogSensors()
+{
+  readAnalog(batPin, battValue);
+
+  battVoltage = (battValue * (5.0 / 1023.0));
+  bChar = dtostrf(battVoltage, 0, 1, b_Buffer); 
+
+}
+
+//--------------------------------------------------------------------------------------
+void bmeData() 
+{
+    c = bme.readTemperature();
+    f = c * 1.8 + 27.0;         //sensor appears to self-heat ~ 2*C so I have -6 for error correction
+    p = ((bme.readPressure() / 100.0F) * 0.02953); //* 0.02953Converts from millibar (hPa) to inches of mercury (Hg)
+    h = bme.readHumidity();
+    
+    fChar = dtostrf(f, 0, 1, f_Buffer);
+    pChar = dtostrf(p, 0, 1, p_Buffer);
+    hChar = dtostrf(h, 0, 1, h_Buffer);
+}
+
+//----------------------------------------------------------------------------------------
+void sendPrintData()
+{
+  Serial.println("Weather Station Report");
+  Serial.println("Date & Time");
+  
+  Serial.print("Temperature = ");
+  Serial.print(f);
+  Serial.println(" *F");
+
+  Serial.print("Pressure = ");
+  Serial.print(p);
+  Serial.println(" Hg");
+
+  Serial.print("Humidity = ");
+  Serial.print(h);
+  Serial.println(" %");
+  
+  Serial.print("B+: ");
+  Serial.print(battValue);
+  Serial.print(" Voltage: ");
+  Serial.println(battVoltage);
+  Serial.println();
+  Serial.println();
+
+  client.publish("esp/temp",fChar);
+  client.publish("esp/pressure", pChar);
+  client.publish("esp/humidity", hChar);
+  client.publish("esp/battery", bChar);
+}
+
+//---------------------------------------------------------------------------------------
+void readAnalog(int Pin, int& Value)
+{
+  delay(10);
+  Value = analogRead(sensorPin);
+}
 
