@@ -225,7 +225,7 @@ void bmeData()
 {
     c = bme.readTemperature();
     f = c * 1.8 + 27.0;         //sensor appears to self-heat ~ 2*C so I have -6 for error correction
-    p = ((bme.readPressure() / 100.0F) * 0.02953); //* 0.02953Converts from millibar (hPa) to inches of mercury (Hg)
+    p = (bme.readPressure() / 100.0F);        // * 0.02953); //* 0.02953Converts from millibar (hPa) to inches of mercury (Hg)
     h = bme.readHumidity();
     
     fChar = dtostrf(f, 0, 1, f_Buffer);
@@ -245,7 +245,24 @@ void sendPrintData()
 
   Serial.print("Pressure = ");
   Serial.print(p);
-  Serial.println(" Hg");
+  Serial.print("hPa ");
+  if(p >= 1025)
+  {
+    Serial.println("High Pressure System");
+  }
+  else if(p >= 1015 && p < 1025)
+  {
+    Serial.println("Avg. Sea Level");
+  }
+  else if(p < 1015 && p > 1000)
+  {
+    Serial.println("Low Pressure System");
+  }
+  else if(p < 1000)
+  {
+    Serial.println("CAT 1 Hurricane");
+  }
+  
 
   Serial.print("Humidity = ");
   Serial.print(h);
