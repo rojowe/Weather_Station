@@ -20,17 +20,19 @@ Parts List
 
 
 PinOut
-- GPIO
-- 0 - LDR Power (North-East) - diode - 
-- 1
-- 2 - LDR Power (South-East) - diode - 
-- 3
-- 4 - SDA
-- 5 - SCL
-- 9 
-- 10 - Battery Signal (On/Off) - transistor acting as a gate
-- 12 - LDR Power (North-West) - diode - 
-- 13 - LDR Power (South-West) - diode - 
-- 14 - Solar Signal (On/Off) - transistor acting as a gate 
-- 15
-- 16
+
+          Battery Voltage Divider - A0 -========- D0 - (GPIO16) - Reset
+                                 - RSV -========- D1 - (SCL) - BME280 / ADS1115
+                                 - RSV -========- D2 - (SDA) - BME280 / ADS1115
+                             - GPIO 10 -========- D3 - (GPIO 0) - Servo (East - West)
+                              - GPIO 9 -========- D4 - ?
+                                     ? -========- 3.3v - 
+                                     ? -========- GND - Solar Voltage Divider
+                                     ? -========- D5 - (GPIO 14) - Servo (North - South)
+                                     ? -========- D6 - 
+Battery Voltage Divider - BME280 - GND -========- D7 - ?
+                         BME280 - 3.3v -========- D8 - ?
+                                  - EN -========- Rx - ?
+                         GPIO 16 - RST -========- Tx - ?
+                Solar PowerBoost - GND -========- GND - ADS1115
+                Solar PowerBoost - Vin -========- 3.3v - ADS1115
